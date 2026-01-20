@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>简单单选/复选框测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #3498db;
+        }
+        
+        .section:nth-child(3) {
+            border-left-color: #e74c3c;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: white;
+            border-radius: 6px;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 180px;
+            outline: none; /* 去掉默认的focus轮廓 */
+        }
+        
+        .option-item:hover {
+            border-color: #3498db;
+            background-color: #f0f8ff;
+        }
+        
+        .option-item:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .option-item.checked {
+            border-color: #3498db;
+            background-color: #e8f4fc;
+        }
+        
+        input[type="radio"],
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .option-label {
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
+        }
+        
+        .btn-warning {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+        }
+        
+        .result-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .result-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .result-content {
+            padding: 15px;
+            background-color: white;
+            border-radius: 6px;
+            border-left: 4px solid #3498db;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .result-success {
+            color: #27ae60;
+            border-left-color: #27ae60;
+        }
+        
+        .result-warning {
+            color: #e67e22;
+            border-left-color: #e67e22;
+        }
+        
+        .result-info {
+            color: #3498db;
+            border-left-color: #3498db;
+        }
+        
+        .empty-message {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .key-hint {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>单选/复选框测试页面</h1>
+        <div class="key-hint">提示：使用Tab键切换选项，空格键选择/取消选择</div>
+        
+        <!-- 单选题部分 -->
+        <div class="section">
+            <h2>1. 选择你最喜欢的编程语言（单选）</h2>
+            <div class="options-container">
+                <div class="option-item" tabindex="0" onclick="selectRadio('python')" onkeydown="handleRadioKey(event, 'python')">
+                    <input type="radio" name="language" id="python" value="Python">
+                    <label for="python" class="option-label">Python</label>
+                </div>
+                <div class="option-item" tabindex="0" onclick="selectRadio('javascript')" onkeydown="handleRadioKey(event, 'javascript')">
+                    <input type="radio" name="language" id="javascript" value="JavaScript">
+                    <label for="javascript" class="option-label">JavaScript</label>
+                </div>
+                <div class="option-item" tabindex="0" onclick="selectRadio('java')" onkeydown="handleRadioKey(event, 'java')">
+                    <input type="radio" name="language" id="java" value="Java">
+                    <label for="java" class="option-label">Java</label>
+                </div>
+                <div class="option-item" tabindex="0" onclick="selectRadio('cpp')" onkeydown="handleRadioKey(event, 'cpp')">
+                    <input type="radio" name="language" id="cpp" value="C++">
+                    <label for="cpp" class="option-label">C++</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 多选题部分 -->
+        <div class="section">
+            <h2>2. 选择你使用过的开发工具（多选）</h2>
+            <div class="options-container">
+                <div class="option-item" tabindex="0" onclick="toggleCheckbox('vscode')" onkeydown="handleCheckboxKey(event, 'vscode')">
+                    <input type="checkbox" id="vscode" value="VSCode">
+                    <label for="vscode" class="option-label">VSCode</label>
+                </div>
+                <div class="option-item" tabindex="0" onclick="toggleCheckbox('pycharm')" onkeydown="handleCheckboxKey(event, 'pycharm')">
+                    <input type="checkbox" id="pycharm" value="PyCharm">
+                    <label for="pycharm" class="option-label">PyCharm</label>
+                </div>
+                <div class="option-item" tabindex="0" onclick="toggleCheckbox('intellij')" onkeydown="handleCheckboxKey(event, 'intellij')">
+                    <input type="checkbox" id="intellij" value="IntelliJ">
+                    <label for="intellij" class="option-label">IntelliJ</label>
+                </div>
+                <div class="option-item" tabindex="0" onclick="toggleCheckbox('eclipse')" onkeydown="handleCheckboxKey(event, 'eclipse')">
+                    <input type="checkbox" id="eclipse" value="Eclipse">
+                    <label for="eclipse" class="option-label">Eclipse</label>
+                </div>
+                <div class="option-item" tabindex="0" onclick="toggleCheckbox('sublime')" onkeydown="handleCheckboxKey(event, 'sublime')">
+                    <input type="checkbox" id="sublime" value="Sublime Text">
+                    <label for="sublime" class="option-label">Sublime Text</label>
+                </div>
+                <div class="option-item" tabindex="0" onclick="toggleCheckbox('notepad')" onkeydown="handleCheckboxKey(event, 'notepad')">
+                    <input type="checkbox" id="notepad" value="Notepad++">
+                    <label for="notepad" class="option-label">Notepad++</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 按钮区域 -->
+        <div class="button-container">
+            <button class="btn-primary" onclick="getRadio()">获取单选结果</button>
+            <button class="btn-secondary" onclick="getCheckbox()">获取复选结果</button>
+            <button class="btn-warning" onclick="clearAll()">清空所有选择</button>
+        </div>
+        
+        <!-- 结果显示区域 -->
+        <div class="result-container">
+            <div class="result-title">测试结果：</div>
+            <div id="result" class="result-content empty-message">
+                请选择选项后点击上方按钮查看结果
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 更新选项的选中状态显示
+        function updateOptionState(inputElement) {
+            const optionItem = inputElement.closest('.option-item');
+            if (inputElement.checked) {
+                optionItem.classList.add('checked');
+            } else {
+                optionItem.classList.remove('checked');
+            }
+        }
+        
+        // 单选按钮选择
+        function selectRadio(value) {
+            const radio = document.getElementById(value);
+            radio.checked = true;
+            
+            // 更新所有单选按钮状态
+            document.querySelectorAll('input[name="language"]').forEach(r => {
+                updateOptionState(r);
+            });
+        }
+        
+        // 复选框切换
+        function toggleCheckbox(value) {
+            const checkbox = document.getElementById(value);
+            checkbox.checked = !checkbox.checked;
+            updateOptionState(checkbox);
+        }
+        
+        // 单选按钮键盘事件处理
+        function handleRadioKey(event, value) {
+            if (event.key === ' ' || event.key === 'Spacebar') {
+                event.preventDefault(); // 防止页面滚动
+                selectRadio(value);
+            }
+            // 回车键也可以选择
+            if (event.key === 'Enter') {
+                selectRadio(value);
+            }
+        }
+        
+        // 复选框键盘事件处理
+        function handleCheckboxKey(event, value) {
+            if (event.key === ' ' || event.key === 'Spacebar') {
+                event.preventDefault(); // 防止页面滚动
+                toggleCheckbox(value);
+            }
+            // 回车键也可以选择
+            if (event.key === 'Enter') {
+                toggleCheckbox(value);
+            }
+        }
+        
+        // 获取单选结果
+        function getRadio() {
+            const radios = document.getElementsByName('language');
+            let selected = null;
+            
+            for (let radio of radios) {
+                if (radio.checked) {
+                    selected = radio.value;
+                    break;
+                }
+            }
+            
+            const result = document.getElementById('result');
+            if (selected) {
+                result.innerHTML = `<span class="result-success">你最喜欢的编程语言是：<strong>${selected}</strong></span>`;
+                result.className = 'result-content result-success';
+            } else {
+                result.innerHTML = '<span class="result-warning">请先选择一个编程语言</span>';
+                result.className = 'result-content result-warning';
+            }
+        }
+        
+        // 获取复选结果
+        function getCheckbox() {
+            const checkboxes = [
+                document.getElementById('vscode'),
+                document.getElementById('pycharm'),
+                document.getElementById('intellij'),
+                document.getElementById('eclipse'),
+                document.getElementById('sublime'),
+                document.getElementById('notepad')
+            ];
+            
+            const selected = [];
+            for (let cb of checkboxes) {
+                if (cb.checked) {
+                    selected.push(cb.value);
+                }
+            }
+            
+            const result = document.getElementById('result');
+            if (selected.length > 0) {
+                const items = selected.map(item => `<strong>${item}</strong>`).join('、');
+                result.innerHTML = `<span class="result-success">你使用过的开发工具有：${items}</span>`;
+                result.className = 'result-content result-success';
+            } else {
+                result.innerHTML = '<span class="result-warning">请选择你使用过的开发工具</span>';
+                result.className = 'result-content result-warning';
+            }
+        }
+        
+        // 清空所有选择
+        function clearAll() {
+            // 清空单选
+            const radios = document.getElementsByName('language');
+            for (let radio of radios) {
+                radio.checked = false;
+                updateOptionState(radio);
+            }
+            
+            // 清空复选
+            const checkboxes = [
+                document.getElementById('vscode'),
+                document.getElementById('pycharm'),
+                document.getElementById('intellij'),
+                document.getElementById('eclipse'),
+                document.getElementById('sublime'),
+                document.getElementById('notepad')
+            ];
+            
+            for (let cb of checkboxes) {
+                cb.checked = false;
+                updateOptionState(cb);
+            }
+            
+            const result = document.getElementById('result');
+            result.innerHTML = '<span class="result-info">已清空所有选择</span>';
+            result.className = 'result-content result-info';
+        }
+        
+        // 初始化：为所有输入元素添加事件监听
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    updateOptionState(this);
+                });
+                
+                // 初始状态
+                updateOptionState(input);
+            });
+            
+            // 添加键盘提示
+            const hint = document.createElement('div');
+            hint.className = 'key-hint';
+            hint.innerHTML = '提示：使用Tab键在选项间切换，空格键选择/取消选择，回车键也可选择';
+            document.querySelector('.container').insertBefore(hint, document.querySelector('.section'));
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiddler 完全使用指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            color: #3498db;
+            margin: 30px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f1f1f1;
+        }
+        
+        h3 {
+            color: #2c3e50;
+            margin: 20px 0 10px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            border-radius: 5px;
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+        }
+        
+        .feature-card h4 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .steps {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .step {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .step:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        code {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 12px 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .warning {
+            background-color: #ffeaea;
+            border-left: 4px solid #e74c3c;
+            padding: 12px 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .image-placeholder {
+            background-color: #ecf0f1;
+            border: 1px dashed #bdc3c7;
+            border-radius: 5px;
+            padding: 30px;
+            text-align: center;
+            color: #7f8c8d;
+            margin: 15px 0;
+        }
+        
+        .platform-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .icon {
+            font-size: 2.5rem;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eaeaea;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Fiddler 网络调试工具完全指南</h1>
+            <p class="subtitle">从入门到精通：捕获、分析和修改 HTTP/HTTPS 流量</p>
+            <div class="platform-icons">
+                <div class="icon">🖥️</div>
+                <div class="icon">📱</div>
+                <div class="icon">🌐</div>
+            </div>
+        </header>
+        
+        <section class="section">
+            <h2>一、Fiddler 简介</h2>
+            <p>Fiddler 是一款功能强大的 HTTP 调试代理工具，能够记录客户端和服务器之间的所有 HTTP/HTTPS 通信。它通过代理方式工作，允许您检查、修改和重发请求，是 Web 开发、测试和安全分析的必备工具。</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>流量监控</h4>
+                    <p>实时监控所有 HTTP/HTTPS 请求和响应，包括请求头、响应头、请求体和响应体。</p>
+                </div>
+                <div class="feature-card">
+                    <h4>断点调试</h4>
+                    <p>在请求发送前或响应返回前设置断点，修改请求或响应内容，测试不同场景。</p>
+                </div>
+                <div class="feature-card">
+                    <h4>性能分析</h4>
+                    <p>分析请求时间线，识别性能瓶颈，优化网站或应用加载速度。</p>
+                </div>
+                <div class="feature-card">
+                    <h4>安全测试</h4>
+                    <p>检查传输中的数据安全，测试 API 接口安全性，发现潜在的安全漏洞。</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>二、下载与安装</h2>
+            
+            <h3>下载方法</h3>
+            <div class="steps">
+                <div class="step">访问 Telerik 官网: https://www.telerik.com/fiddler</div>
+                <div class="step">点击 "Download Fiddler" 按钮</div>
+                <div class="step">选择适合您操作系统的版本（Windows 或 macOS）</div>
+                <div class="step">填写基本信息（姓名和邮箱）后开始下载</div>
+            </div>
+            
+            <div class="image-placeholder">
+                [此处应为 Fiddler 下载页面截图]
+                <p>Fiddler 官方下载页面示意图</p>
+            </div>
+            
+            <h3>安装步骤</h3>
+            <div class="steps">
+                <div class="step">双击下载的安装程序（FiddlerSetup.exe 或类似文件）</div>
+                <div class="step">接受许可协议条款</div>
+                <div class="step">选择安装位置（建议使用默认位置）</div>
+                <div class="step">等待安装完成（通常需要 1-2 分钟）</div>
+                <div class="step">启动 Fiddler，开始使用</div>
+            </div>
+            
+            <div class="note">
+                <strong>注意：</strong>安装过程中，Fiddler 会自动配置系统代理设置，并安装 HTTPS 解密所需的根证书。
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>三、所有可用功能介绍</h2>
+            
+            <h3>核心功能</h3>
+            <ul>
+                <li><strong>流量捕获：</strong>捕获所有经过代理的 HTTP/HTTPS 请求</li>
+                <li><strong>请求/响应查看：</strong>以多种格式（原始、头部、JSON、XML 等）查看请求和响应内容</li>
+                <li><strong>断点设置：</strong>全局断点或针对特定请求设置断点</li>
+                <li><strong>请求篡改：</strong>修改请求参数、头部、请求体等</li>
+                <li><strong>响应篡改：</strong>修改服务器返回的响应内容</li>
+                <li><strong>自动响应：</strong>创建规则，自动用本地文件或预设响应替换服务器响应</li>
+                <li><strong>过滤器：</strong>根据主机、状态码、请求类型等过滤显示的请求</li>
+                <li><strong>性能统计：</strong>统计请求时间、大小、缓存命中率等</li>
+                <li><strong>时间线视图：</strong>图形化显示请求的时间线，方便性能分析</li>
+            </ul>
+            
+            <h3>高级功能</h3>
+            <ul>
+                <li><strong>弱网模拟：</strong>模拟低速网络环境</li>
+                <li><strong>断言：</strong>对响应内容进行断言测试</li>
+                <li><strong>脚本扩展：</strong>使用 FiddlerScript 扩展功能</li>
+                <li><strong>API 测试：</strong>构建和发送自定义 HTTP 请求</li>
+                <li><strong>会话比较：</strong>比较两个会话的差异</li>
+                <li><strong>编码/解码工具：</strong>内置多种编码解码工具</li>
+            </ul>
+            
+            <div class="image-placeholder">
+                [此处应为 Fiddler 主界面截图]
+                <p>Fiddler 主界面示意图，显示会话列表和检查器面板</p>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>四、监听电脑端操作方法</h2>
+            
+            <h3>基本设置</h3>
+            <div class="steps">
+                <div class="step">启动 Fiddler，确保左下角 "Capturing" 按钮为开启状态（或按 F12 键）</div>
+                <div class="step">打开浏览器，访问任意网站</div>
+                <div class="step">观察 Fiddler 主界面左侧的会话列表，应该能看到捕获的请求</div>
+            </div>
+            
+            <h3>配置浏览器代理</h3>
+            <p>大多数情况下，Fiddler 会自动设置系统代理。如果遇到问题，可以手动配置：</p>
+            <div class="steps">
+                <div class="step">打开浏览器设置，找到代理设置</div>
+                <div class="step">设置代理服务器地址为 127.0.0.1（本地主机）</div>
+                <div class="step">设置代理端口为 8888（Fiddler 默认端口）</div>
+                <div class="step">保存设置并刷新页面</div>
+            </div>
+            
+            <div class="note">
+                <strong>提示：</strong>Fiddler 默认只捕获进程外流量（如浏览器）。要捕获进程内流量（如 .NET 应用程序），需要在应用代码中配置代理。
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>五、监听手机端操作方法</h2>
+            
+            <h3>前提条件</h3>
+            <ul>
+                <li>手机和电脑必须在同一局域网（连接同一 Wi-Fi）</li>
+                <li>知道电脑的局域网 IP 地址（在 Fiddler 中可查看）</li>
+            </ul>
+            
+            <h3>配置步骤</h3>
+            <div class="steps">
+                <div class="step">在 Fiddler 中，打开菜单 <code>Tools > Options > Connections</code></div>
+                <div class="step">勾选 "Allow remote computers to connect"</div>
+                <div class="step">记住 Fiddler 监听端口（默认 8888）</div>
+                <div class="step">重启 Fiddler 使设置生效</div>
+                <div class="step">在手机上，进入 Wi-Fi 设置，修改当前连接的网络</div>
+                <div class="step">设置代理为手动，输入电脑的 IP 地址和端口号（8888）</div>
+                <div class="step">在手机浏览器中访问 <code>http://电脑IP:8888</code></div>
+                <div class="step">下载并安装 Fiddler 根证书</div>
+                <div class="step">完成设置，手机上的所有 HTTP/HTTPS 流量都将经过 Fiddler</div>
+            </div>
+            
+            <div class="warning">
+                <strong>重要：</strong>测试结束后，请记得关闭手机上的代理设置，否则手机可能无法正常上网。
+            </div>
+            
+            <div class="image-placeholder">
+                [此处应为手机代理设置界面截图]
+                <p>Android/iOS 代理设置示意图</p>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>六、监听 HTTP 的操作方法</h2>
+            
+            <p>HTTP 监听是 Fiddler 的默认功能，无需额外配置：</p>
+            <div class="steps">
+                <div class="step">确保 Fiddler 正在运行且捕获功能已开启</div>
+                <div class="step">进行任何 HTTP 请求（访问网站、使用应用等）</div>
+                <div class="step">观察 Fiddler 会话列表，所有 HTTP 请求都会显示</div>
+                <div class="step">点击任意会话，查看详细信息</div>
+            </div>
+            
+            <h3>查看请求详情</h3>
+            <p>右侧面板提供多个标签页查看请求和响应：</p>
+            <ul>
+                <li><strong>Headers：</strong>查看请求和响应头部</li>
+                <li><strong>TextView：</strong>查看原始文本内容</li>
+                <li><strong>SyntaxView：</strong>格式化显示 JSON、XML 等结构化数据</li>
+                <li><strong>WebForms：</strong>查看表单提交的参数</li>
+                <li><strong>HexView：</strong>十六进制视图</li>
+                <li><strong>Auth：</strong>认证信息</li>
+                <li><strong>Caching：</strong>缓存相关信息</li>
+                <li><strong>Raw：</strong>原始请求/响应数据</li>
+            </ul>
+        </section>
+        
+        <section class="section">
+            <h2>七、监听 HTTPS 的操作方法</h2>
+            
+            <h3>HTTPS 解密配置</h3>
+            <div class="steps">
+                <div class="step">在 Fiddler 中，打开菜单 <code>Tools > Options > HTTPS</code></div>
+                <div class="step">勾选 "Decrypt HTTPS traffic"</div>
+                <div class="step">在弹出的证书安装提示中，点击 "Yes"</div>
+                <div class="step">选择证书存储位置（建议选择"受信任的根证书颁发机构"）</div>
+                <div class="step">点击 "OK" 保存设置</div>
+                <div class="step">重启 Fiddler</div>
+            </div>
+            
+            <h3>验证 HTTPS 解密</h3>
+            <div class="steps">
+                <div class="step">访问一个 HTTPS 网站（如 https://www.google.com）</div>
+                <div class="step">在 Fiddler 会话列表中，HTTPS 请求应显示为明文</div>
+                <div class="step">点击会话，查看解密后的请求和响应内容</div>
+            </div>
+            
+            <div class="warning">
+                <strong>安全提示：</strong>Fiddler 的 HTTPS 解密是通过中间人攻击方式实现的。在非测试环境中使用后，建议删除 Fiddler 根证书。
+            </div>
+            
+            <div class="image-placeholder">
+                [此处应为 Fiddler HTTPS 配置界面截图]
+                <p>Fiddler HTTPS 解密配置对话框示意图</p>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>八、其他高级功能使用方法</h2>
+            
+            <h3>弱网测试</h3>
+            <p>模拟低速网络环境，测试应用在不良网络条件下的表现：</p>
+            <div class="steps">
+                <div class="step">打开菜单 <code>Rules > Performance > Simulate Modem Speeds</code></div>
+                <div class="step">或者使用更精确的控制：<code>Rules > Customize Rules</code></div>
+                <div class="step">在打开的脚本文件中，找到 <code>OnBeforeRequest</code> 函数</div>
+                <div class="step">添加延迟代码，例如：<code>oSession["request-trickle-delay"] = "300";</code>（单位：毫秒/字节）</div>
+                <div class="step">保存脚本，Fiddler 会自动应用新规则</div>
+            </div>
+            
+            <h3>断言功能</h3>
+            <p>对响应内容进行自动化断言测试：</p>
+            <div class="steps">
+                <div class="step">选择要测试的会话</div>
+                <div class="step">右键点击，选择 <code>Save > Response > Response Body</code> 保存响应</div>
+                <div class="step">打开菜单 <code>Rules > Customize Rules</code></div>
+                <div class="step">在 <code>OnBeforeResponse</code> 函数中添加断言代码</div>
+                <div class="step">示例代码：检查响应是否包含特定内容</div>
+            </div>
+            
+            <pre><code>static function OnBeforeResponse(oSession: Session) {
+    if (oSession.uriContains("example.com")) {
+        var body = oSession.GetResponseBodyAsString();
+        if (!body.Contains("expected_text")) {
+            oSession["ui-color"] = "red";
+            oSession["ui-bold"] = "true";
+        }
+    }
+}</code></pre>
+            
+            <h3>自动响应（AutoResponder）</h3>
+            <p>创建规则，自动用本地文件或预设响应替换服务器响应：</p>
+            <div class="steps">
+                <div class="step">点击右侧 "AutoResponder" 标签</div>
+                <div class="step">勾选 "Enable rules" 和 "Unmatched requests passthrough"</div>
+                <div class="step">点击 "Add Rule" 按钮创建新规则</div>
+                <div class="step">设置匹配规则（如 URL 包含特定字符串）</div>
+                <div class="step">设置响应动作（如返回本地文件、重定向等）</div>
+                <div class="step">保存规则并启用</div>
+            </div>
+            
+            <div class="image-placeholder">
+                [此处应为 Fiddler AutoResponder 界面截图]
+                <p>Fiddler AutoResponder 面板示意图</p>
+            </div>
+        </section>
+        
+        <footer>
+            <p>© 2023 Fiddler 使用指南 | 本指南仅供参考，具体操作可能因 Fiddler 版本不同而有所差异</p>
+            <p>推荐使用最新版本的 Fiddler 以获得最佳体验和最新功能</p>
+        </footer>
+    </div>
+    
+    <script>
+        // 简单的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为功能卡片添加点击效果
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.backgroundColor = '#e8f4fc';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '';
+                    }, 300);
+                });
+            });
+            
+            // 步骤高亮
+            const steps = document.querySelectorAll('.step');
+            steps.forEach(step => {
+                step.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(5px)';
+                });
+                step.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                });
+            });
+            
+            // 代码块复制提示（简化版）
+            const codeBlocks = document.querySelectorAll('pre code');
+            codeBlocks.forEach(block => {
+                block.addEventListener('click', function() {
+                    const textToCopy = this.textContent;
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        const originalText = this.textContent;
+                        this.textContent = '已复制到剪贴板！';
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                        }, 1500);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
