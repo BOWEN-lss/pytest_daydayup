@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下拉框测试页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #6a11cb;
+        }
+        
+        h1 {
+            color: #2575fc;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .test-section {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .test-section:hover {
+            border-color: #2575fc;
+            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.1);
+        }
+        
+        .section-title {
+            color: #2575fc;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            font-size: 1.2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 1.1rem;
+        }
+        
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ced4da;
+            border-radius: 10px;
+            font-size: 1rem;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232575fc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px;
+        }
+        
+        select:focus {
+            border-color: #2575fc;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.25);
+        }
+        
+        select:hover {
+            border-color: #6a11cb;
+        }
+        
+        select.multiple {
+            min-height: 150px;
+            background-image: none;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: #2575fc;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1c65e0;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+        
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e0a800;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+        
+        .result-panel {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .result-title {
+            color: #2575fc;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .result-content {
+            color: #495057;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        .result-item {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #2575fc;
+        }
+        
+        .result-item .label {
+            font-weight: bold;
+            color: #2575fc;
+            margin-right: 10px;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 400px;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        
+        .notification-success {
+            background-color: #28a745;
+        }
+        
+        .notification-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        
+        .notification-error {
+            background-color: #dc3545;
+        }
+        
+        .notification-info {
+            background-color: #17a2b8;
+        }
+        
+        .test-instructions {
+            background-color: #e7f3ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 5px solid #2575fc;
+        }
+        
+        .instructions-title {
+            color: #2575fc;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .instructions-list {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        
+        .instructions-list li {
+            margin-bottom: 8px;
+            padding-left: 10px;
+            position: relative;
+        }
+        
+        .instructions-list li:before {
+            content: "•";
+            color: #2575fc;
+            font-weight: bold;
+            position: absolute;
+            left: -10px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .notification {
+                max-width: 90%;
+                left: 5%;
+                right: 5%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-list-alt"></i> 下拉框测试页面</h1>
+            <p class="subtitle">测试各种下拉框的功能和交互</p>
+        </header>
+        
+        <div class="test-instructions">
+            <h3 class="instructions-title"><i class="fas fa-info-circle"></i> 测试说明</h3>
+            <ul class="instructions-list">
+                <li>此页面包含多种类型的下拉框，可用于自动化测试练习</li>
+                <li>每个下拉框都有对应的操作按钮和结果显示</li>
+                <li>所有操作都会有实时反馈通知</li>
+                <li>测试结果会在底部面板中显示</li>
+            </ul>
+        </div>
+        
+        <!-- 基础下拉框测试 -->
+        <div class="test-section">
+            <h3 class="section-title"><i class="fas fa-caret-down"></i> 基础下拉框</h3>
+            <div class="form-group">
+                <label for="basicSelect">选择你最喜欢的水果：</label>
+                <select id="basicSelect">
+                    <option value="">-- 请选择 --</option>
+                    <option value="apple">🍎 苹果</option>
+                    <option value="banana">🍌 香蕉</option>
+                    <option value="orange">🍊 橙子</option>
+                    <option value="grape">🍇 葡萄</option>
+                    <option value="watermelon">🍉 西瓜</option>
+                    <option value="strawberry">🍓 草莓</option>
+                    <option value="pineapple">🍍 菠萝</option>
+                    <option value="mango">🥭 芒果</option>
+                </select>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="getBasicSelection()">
+                    <i class="fas fa-check"></i> 获取选择
+                </button>
+                <button class="btn btn-secondary" onclick="selectRandomFruit()">
+                    <i class="fas fa-random"></i> 随机选择
+                </button>
+                <button class="btn btn-warning" onclick="resetBasicSelect()">
+                    <i class="fas fa-redo"></i> 重置选择
+                </button>
+            </div>
+        </div>
+        
+        <!-- 多选下拉框 -->
+        <div class="test-section">
+            <h3 class="section-title"><i class="fas fa-list-check"></i> 多选下拉框</h3>
+            <div class="form-group">
+                <label for="multiSelect">选择你喜欢的编程语言（按住Ctrl多选）：</label>
+                <select id="multiSelect" class="multiple" multiple>
+                    <option value="python">🐍 Python</option>
+                    <option value="javascript">⚡ JavaScript</option>
+                    <option value="java">☕ Java</option>
+                    <option value="cpp">⚙️ C++</option>
+                    <option value="csharp">🔷 C#</option>
+                    <option value="php">🐘 PHP</option>
+                    <option value="go">🐹 Go</option>
+                    <option value="rust">🦀 Rust</option>
+                    <option value="swift">🐦 Swift</option>
+                    <option value="kotlin">📱 Kotlin</option>
+                </select>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="getMultiSelection()">
+                    <i class="fas fa-check-double"></i> 获取多选
+                </button>
+                <button class="btn btn-success" onclick="selectAllLanguages()">
+                    <i class="fas fa-check-square"></i> 全选
+                </button>
+                <button class="btn btn-danger" onclick="clearMultiSelection()">
+                    <i class="fas fa-times-circle"></i> 清除选择
+                </button>
+                <button class="btn btn-warning" onclick="selectFirstThree()">
+                    <i class="fas fa-star"></i> 选择前三
+                </button>
+            </div>
+        </div>
+        
+        <!-- 分组下拉框 -->
+        <div class="test-section">
+            <h3 class="section-title"><i class="fas fa-object-group"></i> 分组下拉框</h3>
+            <div class="form-group">
+                <label for="groupSelect">选择你喜欢的动物：</label>
+                <select id="groupSelect">
+                    <option value="">-- 请选择 --</option>
+                    <optgroup label="🐕 宠物">
+                        <option value="dog">狗</option>
+                        <option value="cat">猫</option>
+                        <option value="rabbit">兔子</option>
+                        <option value="hamster">仓鼠</option>
+                    </optgroup>
+                    <optgroup label="🐘 野生动物">
+                        <option value="lion">狮子</option>
+                        <option value="tiger">老虎</option>
+                        <option value="elephant">大象</option>
+                        <option value="giraffe">长颈鹿</option>
+                    </optgroup>
+                    <optgroup label="🐦 鸟类">
+                        <option value="eagle">老鹰</option>
+                        <option value="parrot">鹦鹉</option>
+                        <option value="owl">猫头鹰</option>
+                        <option value="penguin">企鹅</option>
+                    </optgroup>
+                    <optgroup label="🐠 水生动物">
+                        <option value="dolphin">海豚</option>
+                        <option value="shark">鲨鱼</option>
+                        <option value="whale">鲸鱼</option>
+                        <option value="octopus">章鱼</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="getGroupSelection()">
+                    <i class="fas fa-paw"></i> 获取选择
+                </button>
+                <button class="btn btn-secondary" onclick="selectWildAnimal()">
+                    <i class="fas fa-tree"></i> 选择野生动物
+                </button>
+            </div>
+        </div>
+        
+        <!-- 动态下拉框 -->
+        <div class="test-section">
+            <h3 class="section-title"><i class="fas fa-sync-alt"></i> 动态下拉框</h3>
+            <div class="form-group">
+                <label for="dynamicSelect">选择城市：</label>
+                <select id="dynamicSelect">
+                    <option value="">-- 先选择国家 --</option>
+                </select>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="loadCities('china')">
+                    <i class="fas fa-landmark"></i> 加载中国城市
+                </button>
+                <button class="btn btn-primary" onclick="loadCities('usa')">
+                    <i class="fas fa-flag-usa"></i> 加载美国城市
+                </button>
+                <button class="btn btn-primary" onclick="loadCities('japan')">
+                    <i class="fas fa-torii-gate"></i> 加载日本城市
+                </button>
+                <button class="btn btn-warning" onclick="resetDynamicSelect()">
+                    <i class="fas fa-trash"></i> 清空城市
+                </button>
+            </div>
+        </div>
+        
+        <!-- 禁用状态测试 -->
+        <div class="test-section">
+            <h3 class="section-title"><i class="fas fa-ban"></i> 禁用状态测试</h3>
+            <div class="form-group">
+                <label for="disabledSelect">禁用的下拉框：</label>
+                <select id="disabledSelect" disabled>
+                    <option value="option1">选项 1</option>
+                    <option value="option2" selected>选项 2</option>
+                    <option value="option3">选项 3</option>
+                </select>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-success" onclick="enableSelect()">
+                    <i class="fas fa-check-circle"></i> 启用下拉框
+                </button>
+                <button class="btn btn-danger" onclick="disableSelect()">
+                    <i class="fas fa-times-circle"></i> 禁用下拉框
+                </button>
+                <button class="btn btn-primary" onclick="toggleSelectState()">
+                    <i class="fas fa-toggle-on"></i> 切换状态
+                </button>
+            </div>
+        </div>
+        
+        <!-- 尺寸测试 -->
+        <div class="test-section">
+            <h3 class="section-title"><i class="fas fa-expand-alt"></i> 尺寸测试</h3>
+            <div class="form-group">
+                <label for="sizeSelect">选择下拉框尺寸：</label>
+                <select id="sizeSelect" onchange="changeSelectSize(this.value)">
+                    <option value="small">小尺寸</option>
+                    <option value="medium" selected>中尺寸</option>
+                    <option value="large">大尺寸</option>
+                    <option value="xlarge">特大尺寸</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>测试不同尺寸：</label>
+                <select id="testSizeSelect">
+                    <option value="1">选项 1</option>
+                    <option value="2">选项 2</option>
+                    <option value="3">选项 3</option>
+                    <option value="4">选项 4</option>
+                    <option value="5">选项 5</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- 结果显示面板 -->
+        <div class="result-panel">
+            <h3 class="result-title"><i class="fas fa-chart-bar"></i> 测试结果</h3>
+            <div class="result-content" id="resultContent">
+                <div class="result-item">
+                    <span class="label">状态：</span>等待测试...
+                </div>
+            </div>
+            <div class="button-group" style="margin-top: 20px;">
+                <button class="btn btn-danger" onclick="clearResults()">
+                    <i class="fas fa-trash"></i> 清空结果
+                </button>
+                <button class="btn btn-secondary" onclick="exportResults()">
+                    <i class="fas fa-download"></i> 导出结果
+                </button>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 下拉框测试页面 | 用于Selenium自动化测试练习</p>
+        </footer>
+    </div>
+
+    <script>
+        // 通知系统
+        function showNotification(message, type = 'info') {
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.style.animation = 'slideOut 0.3s ease-out forwards';
+                setTimeout(() => {
+                    if (existingNotification.parentNode) {
+                        existingNotification.remove();
+                    }
+                }, 300);
+            }
+            
+            setTimeout(() => {
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                
+                let icon = '';
+                switch(type) {
+                    case 'success': icon = '<i class="fas fa-check-circle"></i>'; break;
+                    case 'warning': icon = '<i class="fas fa-exclamation-triangle"></i>'; break;
+                    case 'error': icon = '<i class="fas fa-times-circle"></i>'; break;
+                    default: icon = '<i class="fas fa-info-circle"></i>';
+                }
+                
+                notification.innerHTML = `${icon} ${message}`;
+                document.body.appendChild(notification);
+                
+                // 3秒后自动消失
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease-out forwards';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.remove();
+                        }
+                    }, 300);
+                }, 3000);
+            }, 350);
+        }
+        
+        // 添加结果到面板
+        function addResult(text, type = 'info') {
+            const resultContent = document.getElementById('resultContent');
+            const resultItem = document.createElement('div');
+            resultItem.className = 'result-item';
+            
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString();
+            
+            let icon = '';
+            switch(type) {
+                case 'success': icon = '✅'; break;
+                case 'warning': icon = '⚠️'; break;
+                case 'error': icon = '❌'; break;
+                default: icon = 'ℹ️';
+            }
+            
+            resultItem.innerHTML = `
+                <span class="label">${icon} [${timeStr}]</span> ${text}
+            `;
+            
+            // 添加到顶部
+            resultContent.insertBefore(resultItem, resultContent.firstChild);
+            
+            // 限制最多显示10条结果
+            const items = resultContent.querySelectorAll('.result-item');
+            if (items.length > 10) {
+                resultContent.removeChild(items[items.length - 1]);
+            }
+        }
+        
+        // 基础下拉框功能
+        function getBasicSelection() {
+            const select = document.getElementById('basicSelect');
+            const selectedValue = select.value;
+            const selectedText = select.options[select.selectedIndex].text;
+            
+            if (selectedValue === '') {
+                showNotification('请先选择一个水果！', 'warning');
+                addResult('未选择任何水果', 'warning');
+                return;
+            }
+            
+            showNotification(`选择了: ${selectedText}`, 'success');
+            addResult(`选择了水果: ${selectedText} (值: ${selectedValue})`, 'success');
+        }
+        
+        function selectRandomFruit() {
+            const select = document.getElementById('basicSelect');
+            const options = Array.from(select.options).filter(opt => opt.value !== '');
+            
+            if (options.length === 0) {
+                showNotification('没有可选的选项！', 'error');
+                return;
+            }
+            
+            const randomOption = options[Math.floor(Math.random() * options.length)];
+            select.value = randomOption.value;
+            
+            showNotification(`随机选择了: ${randomOption.text}`, 'info');
+            addResult(`随机选择了水果: ${randomOption.text}`, 'info');
+        }
+        
+        function resetBasicSelect() {
+            document.getElementById('basicSelect').value = '';
+            showNotification('基础下拉框已重置', 'info');
+            addResult('基础下拉框已重置', 'info');
+        }
+        
+        // 多选下拉框功能
+        function getMultiSelection() {
+            const select = document.getElementById('multiSelect');
+            const selectedOptions = Array.from(select.selectedOptions);
+            
+            if (selectedOptions.length === 0) {
+                showNotification('请至少选择一个编程语言！', 'warning');
+                addResult('未选择任何编程语言', 'warning');
+                return;
+            }
+            
+            const selectedValues = selectedOptions.map(opt => opt.value);
+            const selectedTexts = selectedOptions.map(opt => opt.text);
+            
+            showNotification(`选择了 ${selectedOptions.length} 个语言`, 'success');
+            addResult(`选择了编程语言: ${selectedTexts.join(', ')} (共${selectedOptions.length}个)`, 'success');
+        }
+        
+        function selectAllLanguages() {
+            const select = document.getElementById('multiSelect');
+            for (let i = 0; i < select.options.length; i++) {
+                select.options[i].selected = true;
+            }
+            showNotification('已全选所有编程语言', 'success');
+            addResult('全选了所有编程语言', 'success');
+        }
+        
+        function clearMultiSelection() {
+            const select = document.getElementById('multiSelect');
+            for (let i = 0; i < select.options.length; i++) {
+                select.options[i].selected = false;
+            }
+            showNotification('已清除所有选择', 'info');
+            addResult('清除了多选下拉框的所有选择', 'info');
+        }
+        
+        function selectFirstThree() {
+            const select = document.getElementById('multiSelect');
+            for (let i = 0; i < select.options.length; i++) {
+                select.options[i].selected = i < 3;
+            }
+            showNotification('已选择前三个语言', 'info');
+            addResult('选择了前三个编程语言', 'info');
+        }
+        
+        // 分组下拉框功能
+        function getGroupSelection() {
+            const select = document.getElementById('groupSelect');
+            const selectedValue = select.value;
+            const selectedText = select.options[select.selectedIndex].text;
+            
+            if (selectedValue === '') {
+                showNotification('请先选择一个动物！', 'warning');
+                addResult('未选择任何动物', 'warning');
+                return;
+            }
+            
+            // 获取所属分组
+            const optgroup = select.options[select.selectedIndex].parentNode;
+            const groupLabel = optgroup.label || '未知分组';
+            
+            showNotification(`选择了: ${selectedText} (${groupLabel})`, 'success');
+            addResult(`选择了动物: ${selectedText} (分组: ${groupLabel})`, 'success');
+        }
+        
+        function selectWildAnimal() {
+            const select = document.getElementById('groupSelect');
+            // 找到野生动物组的第一个选项
+            for (let i = 0; i < select.options.length; i++) {
+                const opt = select.options[i];
+                if (opt.parentNode.label === '🐘 野生动物') {
+                    select.value = opt.value;
+                    showNotification(`选择了野生动物: ${opt.text}`, 'info');
+                    addResult(`选择了野生动物: ${opt.text}`, 'info');
+                    return;
+                }
+            }
+            showNotification('未找到野生动物选项', 'warning');
+        }
+        
+        // 动态下拉框功能
+        const citiesData = {
+            china: [
+                {value: 'beijing', text: '北京'},
+                {value: 'shanghai', text: '上海'},
+                {value: 'guangzhou', text: '广州'},
+                {value: 'shenzhen', text: '深圳'},
+                {value: 'chengdu', text: '成都'},
+                {value: 'hangzhou', text: '杭州'}
+            ],
+            usa: [
+                {value: 'newyork', text: '纽约'},
+                {value: 'losangeles', text: '洛杉矶'},
+                {value: 'chicago', text: '芝加哥'},
+                {value: 'houston', text: '休斯顿'},
+                {value: 'miami', text: '迈阿密'},
+                {value: 'seattle', text: '西雅图'}
+            ],
+            japan: [
+                {value: 'tokyo', text: '东京'},
+                {value: 'osaka', text: '大阪'},
+                {value: 'kyoto', text: '京都'},
+                {value: 'nagoya', text: '名古屋'},
+                {value: 'sapporo', text: '札幌'},
+                {value: 'fukuoka', text: '福冈'}
+            ]
+        };
+        
+        function loadCities(country) {
+            const select = document.getElementById('dynamicSelect');
+            select.innerHTML = '<option value="">-- 请选择城市 --</option>';
+            
+            const cities = citiesData[country];
+            cities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city.value;
+                option.textContent = city.text;
+                select.appendChild(option);
+            });
+            
+            const countryNames = {
+                china: '中国',
+                usa: '美国',
+                japan: '日本'
+            };
+            
+            showNotification(`已加载 ${countryNames[country]} 城市`, 'success');
+            addResult(`加载了 ${countryNames[country]} 城市列表`, 'success');
+        }
+        
+        function resetDynamicSelect() {
+            document.getElementById('dynamicSelect').innerHTML = '<option value="">-- 先选择国家 --</option>';
+            showNotification('动态下拉框已重置', 'info');
+            addResult('动态下拉框已重置', 'info');
+        }
+        
+        // 禁用状态测试
+        function enableSelect() {
+            document.getElementById('disabledSelect').disabled = false;
+            showNotification('下拉框已启用', 'success');
+            addResult('启用了下拉框', 'success');
+        }
+        
+        function disableSelect() {
+            document.getElementById('disabledSelect').disabled = true;
+            showNotification('下拉框已禁用', 'warning');
+            addResult('禁用了下拉框', 'warning');
+        }
+        
+        function toggleSelectState() {
+            const select = document.getElementById('disabledSelect');
+            select.disabled = !select.disabled;
+            const state = select.disabled ? '禁用' : '启用';
+            showNotification(`下拉框已${state}`, 'info');
+            addResult(`${state}了下拉框`, 'info');
+        }
+        
+        // 尺寸测试
+        function changeSelectSize(size) {
+            const select = document.getElementById('testSizeSelect');
+            select.className = ''; // 清除所有尺寸类
+            
+            let sizeClass = '';
+            switch(size) {
+                case 'small':
+                    sizeClass = 'small-size';
+                    select.style.padding = '8px 12px';
+                    select.style.fontSize = '0.9rem';
+                    break;
+                case 'medium':
+                    select.style.padding = '12px 15px';
+                    select.style.fontSize = '1rem';
+                    break;
+                case 'large':
+                    select.style.padding = '16px 20px';
+                    select.style.fontSize = '1.2rem';
+                    break;
+                case 'xlarge':
+                    select.style.padding = '20px 25px';
+                    select.style.fontSize = '1.4rem';
+                    break;
+            }
+            
+            if (sizeClass) {
+                select.classList.add(sizeClass);
+            }
+            
+            showNotification(`已切换到${size}尺寸`, 'info');
+            addResult(`切换下拉框尺寸为: ${size}`, 'info');
+        }
+        
+        // 结果面板操作
+        function clearResults() {
+            document.getElementById('resultContent').innerHTML = 
+                '<div class="result-item"><span class="label">状态：</span>等待测试...</div>';
+            showNotification('已清空所有测试结果', 'info');
+        }
+        
+        function exportResults() {
+            const resultItems = document.querySelectorAll('.result-item');
+            let exportText = '下拉框测试结果\n================\n\n';
+            
+            resultItems.forEach(item => {
+                exportText += item.textContent + '\n';
+            });
+            
+            // 创建一个下载链接
+            const blob = new Blob([exportText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'dropdown-test-results.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('结果已导出为文本文件', 'success');
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            addResult('页面加载完成，可以开始测试', 'info');
+            showNotification('下拉框测试页面已就绪', 'info');
+        });
+    </script>
+</body>
+</html>

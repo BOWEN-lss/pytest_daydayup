@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>鼠标 & 键盘 综合测试工具</title>
+<style>
+    body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(135deg, #eef2f3, #ffffff);
+        padding: 40px;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 36px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 40px;
+        text-shadow: 0px 3px 6px rgba(0,0,0,0.15);
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 25px;
+    }
+
+    .card {
+        background: rgba(255,255,255,0.70);
+        border-radius: 20px;
+        padding: 22px;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.5);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        transition: 0.25s;
+    }
+
+    .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 18px 30px rgba(0,0,0,0.18);
+    }
+
+    .card h2 {
+        font-size: 20px;
+        margin-bottom: 12px;
+        color: #444;
+    }
+
+    button {
+        padding: 10px 18px;
+        border-radius: 10px;
+        border: none;
+        font-size: 15px;
+        cursor: pointer;
+        font-weight: 600;
+        background: linear-gradient(135deg, #6a8df7, #5ac3ff);
+        color: #fff;
+        transition: 0.25s;
+        box-shadow: 0 5px 12px rgba(0,0,0,0.15);
+    }
+
+    button:hover {
+        transform: scale(1.07);
+        box-shadow: 0 7px 16px rgba(0,0,0,0.22);
+    }
+
+    .box, .display {
+        height: 60px;
+        background: rgba(255,255,255,0.85);
+        border-radius: 12px;
+        border: 2px solid rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        margin-top: 12px;
+        box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+    }
+
+    input[type=text] {
+        width: 95%;
+        margin-top: 10px;
+        padding: 12px;
+        border-radius: 10px;
+        font-size: 16px;
+        border: 1px solid #bbb;
+        outline: none;
+        box-shadow: inset 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    #dragA, #dropB {
+        width: 65px;
+        height: 65px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        font-weight: bold;
+        cursor: grab;
+        box-shadow: 0px 6px 14px rgba(0,0,0,0.18);
+    }
+    #dragA { background: linear-gradient(135deg,#ffcf5d,#ffa525); }
+    #dropB { background: linear-gradient(135deg,#a8ff78,#78ffd6); }
+    #dragArea { display: flex; justify-content: space-between; margin-top: 15px; padding: 0 10px; }
+</style>
+</head>
+<body>
+<h1>鼠标 & 键盘 综合测试工具</h1>
+
+<div class="grid">
+    <div class="card">
+        <h2>单击测试</h2>
+        <button id="btnC">点击测试</button>
+        <div id="clickBox" class="box">等待点击...</div>
+    </div>
+
+    <div class="card">
+        <h2>右键点击测试</h2>
+        <button id="rightBtn">右键我</button>
+        <div id="rightBox" class="box">等待右键...</div>
+    </div>
+
+    <div class="card">
+        <h2>双击测试</h2>
+        <button id="btnD">双击测试</button>
+        <div id="dblclickBox" class="box">等待双击...</div>
+    </div>
+
+    <div class="card">
+        <h2>鼠标悬停测试</h2>
+        <button id="btnA">悬停 A</button>
+        <button id="btnB">悬停 B</button>
+        <div id="hoverBox" class="box">等待测试...</div>
+    </div>
+
+    <div class="card">
+        <h2>拖拽测试</h2>
+        <div id="dragArea">
+            <div id="dragA" draggable="true">A</div>
+            <div id="dropB">B</div>
+        </div>
+        <div id="dragResult" class="display">等待拖拽...</div>
+    </div>
+
+    <div class="card">
+        <h2>按键显示</h2>
+        <div id="keyShow" class="display">—</div>
+    </div>
+
+    <div class="card">
+        <h2>文本输入模拟</h2>
+        <input id="textInput" type="text" placeholder="输入文字..." />
+        <div id="textOutput" class="display">等待输入...</div>
+    </div>
+
+    <div class="card">
+        <h2>元素定位练习</h2>
+        <button id="btnF">按钮 F</button>
+        <input id="xpathInput" type="text" placeholder="输入 XPath 表达式" />
+        <button id="checkXpath">校验</button>
+        <div id="xpathResult" class="display">等待校验...</div>
+    </div>
+</div>
+
+<script>
+// 悬停
+btnA.onmouseover = () => { hoverBox.textContent = "悬停到 A"; hoverBox.style.borderColor = "#ff5959"; };
+btnA.onmouseout  = () => { hoverBox.textContent = "等待测试..."; hoverBox.style.borderColor = "#aaa"; };
+btnB.onmouseover = () => { hoverBox.textContent = "悬停到 B"; hoverBox.style.borderColor = "#3388ff"; };
+btnB.onmouseout  = () => { hoverBox.textContent = "等待测试..."; hoverBox.style.borderColor = "#aaa"; };
+
+// 单击
+let clickCount=0;
+btnC.onclick = () => { clickCount++; clickBox.textContent = `点击次数：${clickCount}`; };
+
+// 右键
+let rightClickCount=0;
+rightBtn.oncontextmenu = (e) => {
+    e.preventDefault();
+    rightClickCount++;
+    rightBox.textContent = `右击次数：${rightClickCount}`;
+};
+
+// 双击
+let dblCount=0;
+btnD.ondblclick = () => { dblCount++; dblclickBox.textContent = `双击次数：${dblCount}`; };
+
+// 文本输入
+textInput.oninput = () => { textOutput.textContent = textInput.value || "等待输入..."; };
+
+// 键盘按键显示
+document.addEventListener("keydown", e => { keyShow.textContent = e.key === " " ? "空格" : e.key; });
+
+// XPath 校验
+checkXpath.onclick = () => {
+    try {
+        let xp = xpathInput.value.trim();
+        let result = document.evaluate(xp, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        xpathResult.textContent = (result === btnF) ? "正确！" : "不对，重试";
+    } catch {
+        xpathResult.textContent = "XPath 语法错误";
+    }
+};
+
+// 拖拽
+let dragStart=0;
+dragA.addEventListener("dragstart", () => dragStart = Date.now());
+dropB.addEventListener("dragover", e => e.preventDefault());
+dropB.addEventListener("drop", () => {
+    let used = (Date.now() - dragStart) / 1000;
+    dragResult.textContent = used < 0.5 ? "手速惊人！" : "正常速度";
+});
+</script>
+</body>
+</html>

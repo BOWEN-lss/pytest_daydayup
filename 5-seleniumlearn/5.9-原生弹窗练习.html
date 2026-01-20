@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>原生弹窗测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+        
+        .btn-alert {
+            background-color: #FF9800;
+        }
+        
+        .btn-alert:hover {
+            background-color: #F57C00;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+        }
+        
+        .btn-confirm {
+            background-color: #2196F3;
+        }
+        
+        .btn-confirm:hover {
+            background-color: #1976D2;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
+        }
+        
+        .btn-prompt {
+            background-color: #4CAF50;
+        }
+        
+        .btn-prompt:hover {
+            background-color: #388E3C;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 350px;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        
+        .notification-success {
+            background-color: #4CAF50;
+        }
+        
+        .notification-warning {
+            background-color: #FF9800;
+        }
+        
+        .notification-info {
+            background-color: #2196F3;
+        }
+        
+        .notification-error {
+            background-color: #f44336;
+        }
+        
+        .result-display {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .result-title {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .result-content {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        footer {
+            margin-top: 30px;
+            color: white;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>原生弹窗测试</h1>
+        <p class="subtitle">测试浏览器的原生弹窗功能</p>
+        
+        <div class="buttons-container">
+            <button class="btn btn-alert" onclick="showAlert()">
+                测试Alert弹窗
+            </button>
+            
+            <button class="btn btn-confirm" onclick="showConfirm()">
+                测试Confirm弹窗
+            </button>
+            
+            <button class="btn btn-prompt" onclick="showPrompt()">
+                测试Prompt弹窗
+            </button>
+        </div>
+        
+        <div class="result-display">
+            <div class="result-title">操作结果：</div>
+            <div class="result-content" id="resultText">暂无操作记录</div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2023 原生弹窗测试</p>
+    </footer>
+
+    <script>
+        // 显示通知的函数
+        function showNotification(message, type = 'info') {
+            // 移除现有的通知
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // 创建新的通知
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            
+            // 根据类型添加图标
+            let icon = '';
+            if (type === 'success') {
+                icon = '✓';
+            } else if (type === 'warning') {
+                icon = '⚠';
+            } else if (type === 'error') {
+                icon = '✗';
+            } else {
+                icon = 'ℹ';
+            }
+            
+            notification.innerHTML = `<span>${icon}</span> ${message}`;
+            document.body.appendChild(notification);
+            
+            // 1秒后消失
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out forwards';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 1000);
+        }
+        
+        // 更新结果文本
+        function updateResultText(text) {
+            const resultElement = document.getElementById('resultText');
+            resultElement.textContent = text;
+            
+            // 添加时间戳
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString();
+            resultElement.innerHTML = `${text}<br><small style="color:#999;font-size:0.9rem;">操作时间: ${timeStr}</small>`;
+        }
+        
+        // Alert弹窗
+        function showAlert() {
+            const result = alert('这是原生Alert弹窗\n\n点击确定关闭此窗口');
+            updateResultText('Alert弹窗已关闭');
+            showNotification('Alert弹窗已关闭', 'info');
+        }
+        
+        // Confirm弹窗 - 优化版本
+        function showConfirm() {
+            const result = confirm('这是原生Confirm弹窗\n\n请选择确定或取消');
+            
+            if (result) {
+                // 用户点击了确定
+                updateResultText('用户点击了确定按钮');
+                showNotification('用户点击了确定按钮', 'success');
+            } else {
+                // 用户点击了取消
+                updateResultText('用户点击了取消按钮');
+                showNotification('用户点击了取消按钮', 'warning');
+            }
+        }
+        
+        // Prompt弹窗
+        function showPrompt() {
+            const result = prompt('这是原生Prompt弹窗\n\n请输入一些文本：', '默认值');
+            
+            if (result === null) {
+                // 用户点击了取消
+                updateResultText('用户取消了输入');
+                showNotification('用户取消了输入', 'warning');
+            } else if (result.trim() === '') {
+                // 用户输入为空
+                updateResultText('用户输入为空');
+                showNotification('用户输入为空', 'error');
+            } else {
+                // 用户输入了内容
+                updateResultText(`用户输入的内容: ${result}`);
+                showNotification(`已接收输入: ${result}`, 'success');
+            }
+        }
+        
+        // 添加键盘快捷键支持
+        document.addEventListener('keydown', function(e) {
+            // Alt+1 触发 Alert
+            if (e.altKey && e.key === '1') {
+                e.preventDefault();
+                showAlert();
+            }
+            // Alt+2 触发 Confirm
+            else if (e.altKey && e.key === '2') {
+                e.preventDefault();
+                showConfirm();
+            }
+            // Alt+3 触发 Prompt
+            else if (e.altKey && e.key === '3') {
+                e.preventDefault();
+                showPrompt();
+            }
+        });
+        
+        // 初始化显示
+        updateResultText('请点击上方按钮测试弹窗功能');
+    </script>
+</body>
+</html>
