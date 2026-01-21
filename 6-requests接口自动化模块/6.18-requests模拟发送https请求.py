@@ -19,4 +19,4 @@ urllib3.disable_warnings(InsecureRequestWarning) # 禁用告警信息
 import requests
 url = 'https://www.httpbin.org/post'
 res = requests.post(url,verify=False) # 获取响应体信息   添加参数verify=False，意思是关闭SSL验证
-print(res.json())  # 输出响应结果
+print(res.json())  # 输出响应结果+-
